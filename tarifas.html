@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descarga de Tarifas - CV Tools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="img/cvtools.png" alt="CV Tools Logo" class="main-logo">
+            <h1>Descarga de Tarifas</h1>
+        </header>
+
+        <main>
+            <div class="content-box">
+                <h2>Generar y Descargar Tarifas en PDF</h2>
+                <p>Crea un PDF al instante con los precios actualizados y desglosados para cada grupo. La generación puede tardar unos segundos.</p>
+                <button id="pdf-general" class="download-button pdf">PDF Tarifa General</button>
+                <button id="pdf-bigmat" class="download-button pdf">PDF Tarifa BigMat</button>
+                <button id="pdf-neopro" class="download-button pdf">PDF Tarifa Neopro</button>
+                <button id="pdf-ehlis" class="download-button pdf">PDF Tarifa Ehlis</button>
+                <button id="pdf-cecofersa" class="download-button pdf">PDF Tarifa Cecofersa</button>
+                <button id="pdf-synergas" class="download-button pdf">PDF Tarifa Synergas</button>
+                <button id="pdf-grandes-cuentas" class="download-button pdf">PDF Tarifa Grandes Cuentas</button>
+                <button id="pdf-coferdroza" class="download-button pdf">PDF Tarifa Coferdroza</button>
+            </div>
+            
+            <a href="index.html" class="back-link">← Volver al menú principal</a>
+        </main>
+    </div>
+
+    <!-- Librerías para generar PDFs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- Nuestro script para las tarifas -->
+    <script src="tarifas.js"></script>
+</body>
+</html>

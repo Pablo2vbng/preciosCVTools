@@ -3,27 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscador de Precios - CV Tools</title>
+    <title>Portal de Herramientas - CV Tools</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
             <img src="img/cvtools.png" alt="CV Tools Logo" class="main-logo">
-            <h1>Buscador de Precios</h1>
+            <h1>Portal de Herramientas Red Comercial</h1>
         </header>
 
-        <main>
-            <div id="search-wrapper">
-                 <input type="text" id="searchInput" placeholder="Buscar por referencia o descripción...">
-            </div>
-    
-            <div id="resultsContainer">
-                <!-- Los resultados aparecerán aquí -->
-            </div>
+        <main class="menu-grid">
+            <a href="precios.html" class="menu-card">
+                <h2>Buscador de Precios</h2>
+                <p>Consulta los precios actualizados por referencia o descripción.</p>
+            </a>
+            <a href="garantias.html" class="menu-card">
+                <h2>Gestión de Garantías</h2>
+                <p>Instrucciones para la gestión de reclamaciones de clientes.</p>
+            </a>
+            <a href="tarifas.html" class="menu-card">
+                <h2>Descarga de Tarifas</h2>
+                <p>Descarga las listas de precios completas en Excel o PDF.</p>
+            </a>
+            <a href="#" class="menu-card placeholder">
+                <h2>Próximamente</h2>
+                <p>Nuevas herramientas y recursos para facilitar tu trabajo.</p>
+            </a>
         </main>
     </div>
-    
-    <script src="script.js"></script>
 </body>
 </html>
