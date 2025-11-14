@@ -7,14 +7,21 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <img src="img/cvtools.png" alt="CV Tools Logo" class="main-logo">
-    </header>
-
     <div class="container">
-        <h1>Buscador de Precios</h1>
-        <input type="text" id="searchInput" placeholder="Buscar por referencia o descripción...">
-        <div id="resultsContainer"></div>
+        <header>
+            <img src="img/cvtools.png" alt="CV Tools Logo" class="main-logo">
+            <h1>Buscador de Precios</h1>
+        </header>
+
+        <main>
+            <div id="search-wrapper">
+                 <input type="text" id="searchInput" placeholder="Buscar por referencia o descripción...">
+            </div>
+    
+            <div id="resultsContainer">
+                <!-- Los resultados aparecerán aquí -->
+            </div>
+        </main>
     </div>
     
     <script src="script.js"></script>
