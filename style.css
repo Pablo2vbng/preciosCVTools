@@ -1,0 +1,10 @@
+body { font-family: sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+.container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+h1 { text-align: center; }
+#searchInput { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+.product-card { border: 1px solid #eee; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+.product-card h2 { margin: 0 0 5px 0; }
+.product-card p { margin: 5px 0; color: #555; }
+.price-group { margin-top: 15px; }
+.price-group h3 { font-size: 1em; color: #333; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+.price-group span { font-weight: bold; color: #000; }
