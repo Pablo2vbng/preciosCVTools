@@ -1,12 +1,18 @@
-/* --- ESTILO GENERAL (TEMA CLARO Y SÚPER RESPONSIVO) --- */
+/* --- ESTILO GENERAL (TEMA PREMIUM) --- */
 :root {
     --primary-color: #007aff;
     --background-color: #f0f2f5;
     --card-background: #ffffff;
     --text-color: #1d2129;
     --subtle-text: #65676b;
-    --border-color: #dddfe2;
+    --border-color: #e4e6eb;
     --accent-green: #31a24c;
+    
+    /* Paleta de colores para los grupos */
+    --color-standard: #007aff; /* Azul */
+    --color-grandes-cuentas: #5856d6; /* Púrpura */
+    --color-neopro: #34c759; /* Verde */
+    --color-coferdroza: #ff9500; /* Naranja */
 }
 
 body {
@@ -22,25 +28,11 @@ body {
     padding: 1rem;
 }
 
-header {
-    text-align: center;
-    padding: 1.5rem 0;
-}
+header { text-align: center; padding: 1.5rem 0; }
+.main-logo { max-width: 120px; margin-bottom: 1rem; }
+h1 { font-size: 1.75rem; font-weight: 600; margin: 0; }
 
-.main-logo { 
-    max-width: 120px;
-    margin-bottom: 1rem;
-}
-h1 { 
-    font-size: 1.75rem; 
-    font-weight: 600; 
-    margin: 0;
-}
-
-/* --- CAMPO DE BÚSQUEDA --- */
-#search-wrapper {
-    margin-bottom: 1rem;
-}
+#search-wrapper { margin-bottom: 1rem; }
 #searchInput {
     width: 100%;
     padding: 15px;
@@ -51,11 +43,7 @@ h1 {
     box-sizing: border-box;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
-#searchInput:focus { 
-    outline: none; 
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
-}
+#searchInput:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2); }
 
 /* --- TARJETA DE RESULTADO DE PRODUCTO (ACORDEÓN) --- */
 .product-card {
@@ -63,8 +51,8 @@ h1 {
     margin-bottom: 0.75rem;
     border-radius: 12px;
     border: 1px solid var(--border-color);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    overflow: hidden; /* Clave para la animación */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.07);
+    overflow: hidden;
 }
 
 .product-header {
@@ -73,73 +61,39 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.2s ease;
 }
-
-.product-header:hover {
-    background-color: #f9f9f9;
-}
-
-.product-info h2 { 
-    margin: 0; 
-    font-size: 1.1rem; 
-    font-weight: 500; 
-}
-.product-info p { 
-    margin: 4px 0 0 0;
-    color: var(--subtle-text); 
-    font-size: 0.9rem;
-}
-
-/* Icono de expandir/contraer */
-.expand-icon::before {
-    content: '+';
-    font-size: 1.5rem;
-    color: var(--primary-color);
-    transition: transform 0.3s ease;
-}
-.product-header.active .expand-icon::before {
-    transform: rotate(45deg);
-}
-
-/* Detalles del producto (la parte que se expande) */
+.product-header:hover { background-color: #fafafa; }
+.product-info h2 { margin: 0; font-size: 1.1rem; font-weight: 500; }
+.product-info p { margin: 4px 0 0 0; color: var(--subtle-text); font-size: 0.9rem; }
+.expand-icon::before { content: '+'; font-size: 1.5rem; color: #b0b3b8; transition: transform 0.3s ease; }
+.product-header.active .expand-icon::before { transform: rotate(45deg); color: var(--primary-color); }
 .product-details {
-    max-height: 0; /* Por defecto, está contraído */
+    max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease-out;
-    border-top: 1px solid #f0f0f0;
+    transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+    padding: 0 1rem; /* Padding se activa al expandir */
+}
+.product-header.active + .product-details {
+    padding: 0.5rem 1rem 1rem 1rem; /* Añade padding cuando está activo */
 }
 
-/* --- GRUPO DE PRECIOS DENTRO DE LOS DETALLES --- */
+/* --- GRUPO DE PRECIOS CON TARJETAS DE ACENTO --- */
 .price-group {
-    padding: 1rem 1.25rem;
-    border-bottom: 1px solid #f0f0f0;
+    background: #f8f9fa;
+    border-left: 4px solid; /* La barra de color distintiva */
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 0.75rem;
 }
-.price-group:last-child {
-    border-bottom: none;
-}
+.price-group-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.price-group-header img { height: 22px; }
+.price-group-header h3 { margin: 0; font-size: 1rem; font-weight: 500; color: #333; }
+.price-group p { margin: 4px 0 0 0; font-size: 0.95rem; }
+.price-group span { font-weight: 700; color: var(--text-color); font-size: 1.3em; }
 
-.price-group-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
-}
-.price-group-header img { 
-    height: 22px; 
-}
-.price-group-header h3 { 
-    margin: 0; 
-    font-size: 1rem; 
-    font-weight: 500; 
-    color: #333;
-}
-
-.price-group p { 
-    margin: 4px 0 0 0; 
-    font-size: 0.95rem;
-}
-.price-group span { 
-    font-weight: 600; 
-    color: var(--accent-green); 
-    font-size: 1.1rem; 
-}
+/* Asignación de colores de acento a cada grupo */
+.group-standard { border-color: var(--color-standard); }
+.group-grandes-cuentas { border-color: var(--color-grandes-cuentas); }
+.group-neopro { border-color: var(--color-neopro); }
+.group-coferdroza { border-color: var(--color-coferdroza); }
