@@ -6,13 +6,13 @@
     --text-color: #1d2129;
     --subtle-text: #65676b;
     --border-color: #e4e6eb;
-    --accent-green: #31a24c;
     
     /* Paleta de colores para los grupos */
     --color-standard: #007aff; /* Azul */
     --color-grandes-cuentas: #5856d6; /* Púrpura */
     --color-neopro: #34c759; /* Verde */
     --color-coferdroza: #ff9500; /* Naranja */
+    --color-cecofersa: #d9272d; /* Rojo corporativo */
 }
 
 body {
@@ -72,16 +72,16 @@ h1 { font-size: 1.75rem; font-weight: 600; margin: 0; }
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
-    padding: 0 1rem; /* Padding se activa al expandir */
+    padding: 0 1rem;
 }
 .product-header.active + .product-details {
-    padding: 0.5rem 1rem 1rem 1rem; /* Añade padding cuando está activo */
+    padding: 0.5rem 1rem 1rem 1rem;
 }
 
 /* --- GRUPO DE PRECIOS CON TARJETAS DE ACENTO --- */
 .price-group {
     background: #f8f9fa;
-    border-left: 4px solid; /* La barra de color distintiva */
+    border-left: 4px solid;
     padding: 1rem;
     border-radius: 8px;
     margin-top: 0.75rem;
@@ -97,3 +97,4 @@ h1 { font-size: 1.75rem; font-weight: 600; margin: 0; }
 .group-grandes-cuentas { border-color: var(--color-grandes-cuentas); }
 .group-neopro { border-color: var(--color-neopro); }
 .group-coferdroza { border-color: var(--color-coferdroza); }
+.group-cecofersa { border-color: var(--color-cecofersa); } /* NUEVA CLASE */

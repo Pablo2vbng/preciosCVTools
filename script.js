@@ -38,14 +38,17 @@ function displayResults(products) {
 
     let html = '';
     products.forEach(product => {
-        // Lógica de precios
+        // --- LÓGICA DE PRECIOS ACTUALIZADA ---
         let estandarPriceHTML = `<p>PVP: <span>${(product.precio_estandar || 0).toFixed(2)} €</span></p>`;
         if (product.netos) estandarPriceHTML += `<p>${product.condiciones_neto}</p>`;
         
         let grandesCuentasPriceHTML = `<p>PVP: <span>${(product.precio_estandar || 0).toFixed(2)} €</span></p>`;
         if (product.netos_grande_cuentas) grandesCuentasPriceHTML += `<p>${product.condicion_neto_gc}</p>`;
+        
+        // --- NUEVA LÓGICA PARA CECOFERSA ---
+        let cecofersaPriceHTML = `<p>Precio: <span>${(product.precio_cecofersa || 0).toFixed(2)} €</span></p>`;
+        if (product.netos) cecofersaPriceHTML += `<p>${product.condiciones_neto}</p>`;
 
-        // Construcción de la tarjeta HTML del acordeón
         html += `
             <div class="product-card">
                 <div class="product-header">
@@ -56,28 +59,38 @@ function displayResults(products) {
                     <div class="expand-icon"></div>
                 </div>
                 <div class="product-details">
-                    <div class="price-group">
+                    <div class="price-group group-standard">
                         <div class="price-group-header">
-                            <img src="img/cvtools.png" alt="CV Tools"><img src="img/bigmat.png" alt="Bigmat"><img src="img/cecofersa.png" alt="Cecofersa">
-                            <h3>Cliente Estándar / Bigmat / Cecofersa / Tarifa - 50% dto</h3>
+                            <img src="img/cvtools.png" alt="CV Tools"><img src="img/bigmat.png" alt="Bigmat">
+                            <h3>Cliente Estándar / Bigmat/ 50% dto</h3>
                         </div>
                         ${estandarPriceHTML}
                     </div>
-                    <div class="price-group">
-                         <div class="price-group-header"><h3>Grandes Cuentas / Tarifa - 50% dto</h3></div>
+                    
+                    <!-- NUEVO GRUPO PARA CECOFERSA -->
+                    <div class="price-group group-cecofersa">
+                        <div class="price-group-header">
+                            <img src="img/cecofersa.png" alt="Cecofersa">
+                            <h3>Socios Cecofersa/52% dto</h3>
+                        </div>
+                        ${cecofersaPriceHTML}
+                    </div>
+
+                    <div class="price-group group-grandes-cuentas">
+                         <div class="price-group-header"><h3>Grandes Cuentas/ 50% dto</h3></div>
                         ${grandesCuentasPriceHTML}
                     </div>
-                    <div class="price-group">
+                    <div class="price-group group-neopro">
                         <div class="price-group-header">
                             <img src="img/neopro.jpg" alt="Neopro"><img src="img/ehlis.jpg" alt="Ehlis">
-                            <h3>Socios Neopro / Ehlis / Synergas / Tarifa - 52% dto</h3>
+                            <h3>Socios Neopro / Ehlis / 52% dto</h3>
                         </div>
-                        <p>Precio: <span>${(product.precio_grupo1 || 0).toFixed(2)} €</span> (Netos no aplicables)</p>
+                        <p>Precio: <span>${(product.precio_grupo1 || 0).toFixed(2)} €</span>(Netos no aplicables)</p>
                     </div>
-                    <div class="price-group">
+                    <div class="price-group group-coferdroza">
                         <div class="price-group-header">
                             <img src="img/coferdroza.png" alt="Coferdroza">
-                            <h3>Socios Coferdroza / Tarifa - 50% dto</h3>
+                            <h3>Socios Coferdroza / 50% dto</h3>
                         </div>
                         <p>Precio: <span>${(product.precio_grupo3 || 0).toFixed(2)} €</span> (Netos no aplicables)</p>
                     </div>
@@ -86,8 +99,6 @@ function displayResults(products) {
         `;
     });
     resultsContainer.innerHTML = html;
-
-    // AÑADIR LA INTERACTIVIDAD A LAS NUEVAS TARJETAS
     addAccordionEvents();
 }
 
@@ -95,17 +106,11 @@ function addAccordionEvents() {
     const headers = document.querySelectorAll('.product-header');
     headers.forEach(header => {
         header.addEventListener('click', () => {
-            // Añade/quita la clase 'active' para cambiar el icono
             header.classList.toggle('active');
-            
-            // Selecciona el contenido a expandir
             const details = header.nextElementSibling;
-            
-            // Si el contenido ya está expandido, lo contraemos (max-height = 0)
             if (details.style.maxHeight) {
                 details.style.maxHeight = null;
             } else {
-                // Si está contraído, le damos una altura para que se expanda
                 details.style.maxHeight = details.scrollHeight + "px";
             }
         });
