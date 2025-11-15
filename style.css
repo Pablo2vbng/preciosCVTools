@@ -33,3 +33,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 
 /* (El resto de estilos de menú y descargas no cambia) */
 .menu-grid{display:grid;grid-template-columns:1fr;gap:1rem}@media (min-width:600px){.menu-grid{grid-template-columns:1fr 1fr}}.menu-card{background:var(--card-background);padding:1.5rem;border-radius:12px;text-decoration:none;color:var(--text-color);border:1px solid var(--border-color);box-shadow:0 2px 4px rgba(0,0,0,.07);transition:transform .2s ease,box-shadow .2s ease}.menu-card:hover{transform:translateY(-5px);box-shadow:0 4px 12px rgba(0,0,0,.1)}.menu-card h2{margin:0 0 .5rem 0;font-size:1.2rem}.menu-card p{margin:0;color:var(--subtle-text);font-size:.9rem}.menu-card.placeholder{background-color:#f0f2f5;border-style:dashed}.content-box{background:var(--card-background);padding:1.5rem;border-radius:12px;border:1px solid var(--border-color);margin-bottom:1.5rem}.content-box h2{margin-top:0}.link-box{display:flex;gap:.5rem}.link-box input{flex-grow:1;border:1px solid var(--border-color);border-radius:8px;padding:10px;font-family:monospace;background-color:#f8f9fa}.link-box button{background-color:var(--primary-color);color:#fff;border:none;border-radius:8px;padding:0 1rem;font-weight:500;cursor:pointer}.feedback-hidden{display:none}.download-button{display:block;text-decoration:none;text-align:center;padding:12px;border-radius:8px;margin-top:1rem;font-weight:500;transition:background-color .2s ease;border:none;width:100%;font-size:1rem;cursor:pointer}.download-button.excel{background-color:#1D6F42;color:#fff}.download-button.excel:hover{background-color:#165934}.download-button.pdf{background-color:#B30B00;color:#fff}.download-button.pdf:hover{background-color:#8C0900}.download-button:disabled{background-color:#aaa;cursor:not-allowed}.back-link{display:inline-block;margin-top:1.5rem;color:var(--primary-color);text-decoration:none;font-weight:500}
+footer {
+    text-align: center;
+    margin-top: 40px; /* Espacio para separar del contenido de arriba */
+    padding: 20px 0;
+}
+
+.footer-text {
+    font-size: 0.9em; /* Texto un 10% más pequeño */
+    color: #888;       /* Color gris suave */
+}
