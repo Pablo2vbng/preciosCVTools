@@ -5,7 +5,6 @@ const searchInput = document.getElementById('searchInput');
 const resultsContainer = document.getElementById('resultsContainer');
 let allProducts = [];
 
-// Carga de datos inicial
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const response = await fetch(API_URL);
@@ -17,7 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// Evento de búsqueda
 searchInput.addEventListener('input', () => {
     const query = searchInput.value.toLowerCase().trim();
     if (query.length < 2) {
@@ -32,7 +30,6 @@ searchInput.addEventListener('input', () => {
     displayResults(filteredProducts);
 });
 
-// Función para mostrar los resultados con la vista detallada
 function displayResults(products) {
     if (products.length === 0) {
         resultsContainer.innerHTML = '<p style="text-align: center; color: var(--subtle-text);">No se encontraron resultados.</p>';
@@ -42,11 +39,7 @@ function displayResults(products) {
     let html = '';
     products.forEach((product, index) => {
         const pvpBase = (product.pvp || 0).toFixed(2);
-        
-        const createPriceDetail = (dto, finalPrice, netoInfo) => {
-            return `<div class="price-details-grid"><p class="price-line"><strong>PVP Base:</strong> <span>${pvpBase} €</span></p><p class="price-line"><strong>Descuento:</strong> <span>${dto}</span></p><p class="price-line"><strong>Precio Final:</strong> <span class="final-price">${finalPrice}</span></p><p class="price-line"><strong>Precio Neto:</strong> <span class="neto-price">${netoInfo}</span></p></div>`;
-        };
-
+        const createPriceDetail = (dto, finalPrice, netoInfo) => `<div class="price-details-grid"><p class="price-line"><strong>PVP Base:</strong> <span>${pvpBase} €</span></p><p class="price-line"><strong>Descuento:</strong> <span>${dto}</span></p><p class="price-line"><strong>Precio Final:</strong> <span class="final-price">${finalPrice}</span></p><p class="price-line"><strong>Precio Neto:</strong> <span class="neto-price">${netoInfo}</span></p></div>`;
         const generalPriceHTML = createPriceDetail('50%', `${(product.precio_estandar || 0).toFixed(2)} €`, product.condiciones_neto || 'No aplica');
         const bigmatPriceHTML = createPriceDetail('50%', `${(product.precio_estandar || 0).toFixed(2)} €`, product.condiciones_neto || 'No aplica');
         const neoproPriceHTML = createPriceDetail('52%', `${(product.precio_grupo1 || 0).toFixed(2)} €`, 'No aplica');
@@ -58,7 +51,7 @@ function displayResults(products) {
 
         html += `
             <div class="product-card">
-                <div class="product-header" data-reference="${product.referencia}" data-container-id="tech-sheet-${index}">
+                <div class="product-header" data-reference="${product.referencia}" data-description="${product.descripcion || ''}" data-container-id="tech-sheet-${index}">
                     <div class="product-info">
                         <h2>${product.descripcion || 'Sin descripción'}</h2>
                         <p>Ref: ${product.referencia || 'N/A'}</p>
@@ -85,16 +78,11 @@ function displayResults(products) {
     addAccordionEvents();
 }
 
-// Función para manejar la interactividad del acordeón Y la búsqueda de la ficha técnica
 function addAccordionEvents() {
     document.querySelectorAll(".product-header").forEach(header => {
-        // Usamos una bandera para evitar buscar la ficha más de una vez
         let hasBeenChecked = false;
-
         header.addEventListener('click', async () => {
             const isActive = header.classList.contains('active');
-            
-            // Cerrar todos los demás acordeones para una interfaz más limpia
             document.querySelectorAll('.product-header.active').forEach(activeHeader => {
                 if(activeHeader !== header) {
                     activeHeader.classList.remove('active');
@@ -102,30 +90,30 @@ function addAccordionEvents() {
                 }
             });
 
-            // Abrir o cerrar el acordeón actual
             header.classList.toggle('active');
             const details = header.nextElementSibling;
             
             if (header.classList.contains('active')) {
                 details.style.maxHeight = details.scrollHeight + "px";
                 
-                // Si es la primera vez que abrimos este acordeón, buscamos la ficha
                 if (!hasBeenChecked) {
-                    hasBeenChecked = true; // Marcamos como verificado
+                    hasBeenChecked = true;
                     const reference = header.dataset.reference;
+                    const description = encodeURIComponent(header.dataset.description); // Codificamos la descripción para la URL
                     const containerId = header.dataset.containerId;
                     const container = document.getElementById(containerId);
                     
                     container.innerHTML = '<p class="tech-sheet-status">Buscando ficha técnica...</p>';
                     
-                    const finderUrl = `${API_URL}?action=findFile&fileName=FT${reference}.pdf`;
+                    // --- NUEVA URL DE BÚSQUEDA AVANZADA ---
+                    const finderUrl = `${API_URL}?action=findFile&reference=${reference}&description=${description}`;
 
                     try {
                         const response = await fetch(finderUrl);
-                        // Google Apps Script puede devolver el texto "null"
                         const fileUrl = await response.text();
 
-                        if (fileUrl && fileUrl !== 'null') {
+                        // Comprobación robusta para evitar errores
+                        if (fileUrl && fileUrl !== 'null' && !fileUrl.startsWith('<!DOCTYPE html>')) {
                             container.innerHTML = `<a href="${fileUrl}" class="download-button tech-sheet" target="_blank">Descargar Ficha Técnica (PDF)</a>`;
                         } else {
                             container.innerHTML = '<p class="tech-sheet-status">Ficha técnica no encontrada.</p>';
@@ -138,7 +126,7 @@ function addAccordionEvents() {
                     details.style.maxHeight = details.scrollHeight + "px";
                 }
             } else {
-                details.style.maxHeight = null; // Contraer el acordeón
+                details.style.maxHeight = null;
             }
         });
     });
