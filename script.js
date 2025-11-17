@@ -1,4 +1,4 @@
-// --- URL DE TU API DE GOOGLE APPS SCRIPT ---
+// --- URL DE TU API DE GOOGLE APPS SCRIPT (YA ACTUALIZADA) ---
 const API_URL = 'https://script.google.com/macros/s/AKfycbyrFV__NgykcCsZS4eI--1N2j9JCFGbcWed8ZMhZqS3pdAeGzYn8Za0m9butWfYQIpafw/exec';
 
 const searchInput = document.getElementById('searchInput');
@@ -32,7 +32,7 @@ searchInput.addEventListener('input', () => {
     displayResults(filteredProducts);
 });
 
-// FUNCIÓN PARA MOSTRAR RESULTADOS CON LA NUEVA VISTA DETALLADA
+// Función para mostrar los resultados con la vista detallada
 function displayResults(products) {
     if (products.length === 0) {
         resultsContainer.innerHTML = '<p style="text-align: center; color: var(--subtle-text);">No se encontraron resultados.</p>';
@@ -40,22 +40,13 @@ function displayResults(products) {
     }
 
     let html = '';
-    products.forEach(product => {
+    products.forEach((product, index) => {
         const pvpBase = (product.pvp || 0).toFixed(2);
         
-        // --- FUNCIÓN AUXILIAR PARA CREAR LA ESTRUCTURA DE PRECIOS ---
         const createPriceDetail = (dto, finalPrice, netoInfo) => {
-            return `
-                <div class="price-details-grid">
-                    <p class="price-line"><strong>PVP Base:</strong> <span>${pvpBase} €</span></p>
-                    <p class="price-line"><strong>Descuento:</strong> <span>${dto}</span></p>
-                    <p class="price-line"><strong>Precio Final:</strong> <span class="final-price">${finalPrice}</span></p>
-                    <p class="price-line"><strong>Precio Neto:</strong> <span class="neto-price">${netoInfo}</span></p>
-                </div>
-            `;
+            return `<div class="price-details-grid"><p class="price-line"><strong>PVP Base:</strong> <span>${pvpBase} €</span></p><p class="price-line"><strong>Descuento:</strong> <span>${dto}</span></p><p class="price-line"><strong>Precio Final:</strong> <span class="final-price">${finalPrice}</span></p><p class="price-line"><strong>Precio Neto:</strong> <span class="neto-price">${netoInfo}</span></p></div>`;
         };
 
-        // --- LÓGICA PARA CADA UNA DE LAS 8 TARIFAS ---
         const generalPriceHTML = createPriceDetail('50%', `${(product.precio_estandar || 0).toFixed(2)} €`, product.condiciones_neto || 'No aplica');
         const bigmatPriceHTML = createPriceDetail('50%', `${(product.precio_estandar || 0).toFixed(2)} €`, product.condiciones_neto || 'No aplica');
         const neoproPriceHTML = createPriceDetail('52%', `${(product.precio_grupo1 || 0).toFixed(2)} €`, 'No aplica');
@@ -67,7 +58,7 @@ function displayResults(products) {
 
         html += `
             <div class="product-card">
-                <div class="product-header">
+                <div class="product-header" data-reference="${product.referencia}" data-container-id="tech-sheet-${index}">
                     <div class="product-info">
                         <h2>${product.descripcion || 'Sin descripción'}</h2>
                         <p>Ref: ${product.referencia || 'N/A'}</p>
@@ -83,6 +74,10 @@ function displayResults(products) {
                     <div class="price-group group-synergas"><div class="price-group-header"><h3>Tarifa Synergas</h3></div>${synergasPriceHTML}</div>
                     <div class="price-group group-grandes-cuentas"><div class="price-group-header"><h3>Tarifa Grandes Cuentas</h3></div>${grandesCuentasPriceHTML}</div>
                     <div class="price-group group-coferdroza"><div class="price-group-header"><img src="img/coferdroza.png" alt="Coferdroza"><h3>Tarifa Coferdroza</h3></div>${coferdrozaPriceHTML}</div>
+                    
+                    <div class="tech-sheet-container" id="tech-sheet-${index}">
+                        <!-- El botón de la ficha técnica se insertará aquí dinámicamente -->
+                    </div>
                 </div>
             </div>`;
     });
@@ -90,12 +85,61 @@ function displayResults(products) {
     addAccordionEvents();
 }
 
+// Función para manejar la interactividad del acordeón Y la búsqueda de la ficha técnica
 function addAccordionEvents() {
     document.querySelectorAll(".product-header").forEach(header => {
-        header.addEventListener('click', () => {
+        // Usamos una bandera para evitar buscar la ficha más de una vez
+        let hasBeenChecked = false;
+
+        header.addEventListener('click', async () => {
+            const isActive = header.classList.contains('active');
+            
+            // Cerrar todos los demás acordeones para una interfaz más limpia
+            document.querySelectorAll('.product-header.active').forEach(activeHeader => {
+                if(activeHeader !== header) {
+                    activeHeader.classList.remove('active');
+                    activeHeader.nextElementSibling.style.maxHeight = null;
+                }
+            });
+
+            // Abrir o cerrar el acordeón actual
             header.classList.toggle('active');
             const details = header.nextElementSibling;
-            details.style.maxHeight ? details.style.maxHeight = null : details.style.maxHeight = details.scrollHeight + "px";
+            
+            if (header.classList.contains('active')) {
+                details.style.maxHeight = details.scrollHeight + "px";
+                
+                // Si es la primera vez que abrimos este acordeón, buscamos la ficha
+                if (!hasBeenChecked) {
+                    hasBeenChecked = true; // Marcamos como verificado
+                    const reference = header.dataset.reference;
+                    const containerId = header.dataset.containerId;
+                    const container = document.getElementById(containerId);
+                    
+                    container.innerHTML = '<p class="tech-sheet-status">Buscando ficha técnica...</p>';
+                    
+                    const finderUrl = `${API_URL}?action=findFile&fileName=FT${reference}.pdf`;
+
+                    try {
+                        const response = await fetch(finderUrl);
+                        // Google Apps Script puede devolver el texto "null"
+                        const fileUrl = await response.text();
+
+                        if (fileUrl && fileUrl !== 'null') {
+                            container.innerHTML = `<a href="${fileUrl}" class="download-button tech-sheet" target="_blank">Descargar Ficha Técnica (PDF)</a>`;
+                        } else {
+                            container.innerHTML = '<p class="tech-sheet-status">Ficha técnica no encontrada.</p>';
+                        }
+                    } catch (error) {
+                        container.innerHTML = '<p class="tech-sheet-status">Error al buscar la ficha.</p>';
+                        console.error('Error finding file:', error);
+                    }
+                    // Reajustar la altura del acordeón por si el contenido ha cambiado
+                    details.style.maxHeight = details.scrollHeight + "px";
+                }
+            } else {
+                details.style.maxHeight = null; // Contraer el acordeón
+            }
         });
     });
 }
