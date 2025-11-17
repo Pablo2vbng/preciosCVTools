@@ -1,4 +1,4 @@
-// --- URL DE TU API DE GOOGLE APPS SCRIPT (YA ACTUALIZADA) ---
+// --- URL DE TU API DE GOOGLE APPS SCRIPT ---
 const API_URL = 'https://script.google.com/macros/s/AKfycbyrFV__NgykcCsZS4eI--1N2j9JCFGbcWed8ZMhZqS3pdAeGzYn8Za0m9butWfYQIpafw/exec';
 
 const searchInput = document.getElementById('searchInput');
@@ -59,6 +59,11 @@ function displayResults(products) {
                     <div class="expand-icon"></div>
                 </div>
                 <div class="product-details">
+                    <!-- FICHA TÉCNICA AHORA VA PRIMERO -->
+                    <div class="tech-sheet-container" id="tech-sheet-${index}">
+                        <!-- El botón de la ficha técnica se insertará aquí dinámicamente -->
+                    </div>
+
                     <div class="price-group group-standard"><div class="price-group-header"><h3>Tarifa General</h3></div>${generalPriceHTML}</div>
                     <div class="price-group group-bigmat"><div class="price-group-header"><img src="img/bigmat.png" alt="Bigmat"><h3>Tarifa BigMat</h3></div>${bigmatPriceHTML}</div>
                     <div class="price-group group-neopro"><div class="price-group-header"><img src="img/neopro.jpg" alt="Neopro"><h3>Tarifa Neopro</h3></div>${neoproPriceHTML}</div>
@@ -67,10 +72,6 @@ function displayResults(products) {
                     <div class="price-group group-synergas"><div class="price-group-header"><h3>Tarifa Synergas</h3></div>${synergasPriceHTML}</div>
                     <div class="price-group group-grandes-cuentas"><div class="price-group-header"><h3>Tarifa Grandes Cuentas</h3></div>${grandesCuentasPriceHTML}</div>
                     <div class="price-group group-coferdroza"><div class="price-group-header"><img src="img/coferdroza.png" alt="Coferdroza"><h3>Tarifa Coferdroza</h3></div>${coferdrozaPriceHTML}</div>
-                    
-                    <div class="tech-sheet-container" id="tech-sheet-${index}">
-                        <!-- El botón de la ficha técnica se insertará aquí dinámicamente -->
-                    </div>
                 </div>
             </div>`;
     });
@@ -94,27 +95,28 @@ function addAccordionEvents() {
             const details = header.nextElementSibling;
             
             if (header.classList.contains('active')) {
+                // Primero ajustamos la altura y luego buscamos, para una animación más suave
                 details.style.maxHeight = details.scrollHeight + "px";
                 
                 if (!hasBeenChecked) {
                     hasBeenChecked = true;
                     const reference = header.dataset.reference;
-                    const description = encodeURIComponent(header.dataset.description); // Codificamos la descripción para la URL
+                    const description = encodeURIComponent(header.dataset.description);
                     const containerId = header.dataset.containerId;
                     const container = document.getElementById(containerId);
                     
                     container.innerHTML = '<p class="tech-sheet-status">Buscando ficha técnica...</p>';
                     
-                    // --- NUEVA URL DE BÚSQUEDA AVANZADA ---
                     const finderUrl = `${API_URL}?action=findFile&reference=${reference}&description=${description}`;
 
                     try {
                         const response = await fetch(finderUrl);
                         const fileUrl = await response.text();
 
-                        // Comprobación robusta para evitar errores
-                        if (fileUrl && fileUrl !== 'null' && !fileUrl.startsWith('<!DOCTYPE html>')) {
-                            container.innerHTML = `<a href="${fileUrl}" class="download-button tech-sheet" target="_blank">Descargar Ficha Técnica (PDF)</a>`;
+                        if (fileUrl && fileUrl !== 'null' && fileUrl.startsWith('https://')) {
+                            // Icono SVG para el botón
+                            const iconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/></svg>`;
+                            container.innerHTML = `<a href="${fileUrl}" class="tech-sheet-button" target="_blank">${iconSVG} <span>Ver Ficha Técnica</span></a>`;
                         } else {
                             container.innerHTML = '<p class="tech-sheet-status">Ficha técnica no encontrada.</p>';
                         }

@@ -7,67 +7,43 @@
     --subtle-text: #65676b;
     --border-color: #e4e6eb;
     
-    /* Paleta de colores para los grupos */
-    --color-general: #6c757d; /* Gris */
-    --color-bigmat: #004b93; /* Azul BigMat */
-    --color-neopro: #f58220; /* Naranja Neopro */
-    --color-ehlis: #cc0000; /* Rojo Ehlis */
-    --color-cecofersa: #d9272d; /* Rojo Cecofersa */
-    --color-synergas: #009b3a; /* Verde Synergas */
-    --color-grandes-cuentas: #5856d6; /* Púrpura */
-    --color-coferdroza: #ff9500; /* Naranja */
+    /* (El resto de variables de color no cambia) */
+    --color-general: #6c757d; --color-bigmat: #004b93; --color-neopro: #f58220; --color-ehlis: #cc0000; --color-cecofersa: #d9272d; --color-synergas: #009b3a; --color-grandes-cuentas: #5856d6; --color-coferdroza: #ff9500;
 }
 
-/* (El resto del CSS general no cambia) */
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background-color:var(--background-color);color:var(--text-color);margin:0}.container{max-width:700px;margin:0 auto;padding:1rem}header{text-align:center;padding:1.5rem 0}.main-logo{max-width:120px;margin-bottom:1rem}h1{font-size:1.75rem;font-weight:600;margin:0}#search-wrapper{margin-bottom:1rem}#searchInput{width:100%;padding:15px;font-size:1rem;background-color:var(--card-background);border:1px solid var(--border-color);border-radius:12px;box-sizing:border-box;box-shadow:0 1px 2px rgba(0,0,0,.05)}#searchInput:focus{outline:0;border-color:var(--primary-color);box-shadow:0 0 0 3px rgba(0,122,255,.2)}.product-card{background:var(--card-background);margin-bottom:.75rem;border-radius:12px;border:1px solid var(--border-color);box-shadow:0 2px 4px rgba(0,0,0,.07);overflow:hidden}.product-header{padding:1rem 1.25rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background-color .2s ease}.product-header:hover{background-color:#fafafa}.product-info h2{margin:0;font-size:1.1rem;font-weight:500}.product-info p{margin:4px 0 0 0;color:var(--subtle-text);font-size:.9rem}.expand-icon::before{content:'+';font-size:1.5rem;color:#b0b3b8;transition:transform .3s ease}.product-header.active .expand-icon::before{transform:rotate(45deg);color:var(--primary-color)}.product-details{max-height:0;overflow:hidden;transition:max-height .4s ease-in-out,padding .4s ease-in-out;padding:0 1rem}.product-header.active+.details{padding:.5rem 1rem 1rem 1rem}.price-group{background:#f8f9fa;border-left:4px solid;padding:1rem;border-radius:8px;margin-top:.75rem}.price-group-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}.price-group-header img{height:22px}.price-group-header h3{margin:0;font-size:1rem;font-weight:500;color:#333}
-
-/* --- NUEVOS ESTILOS PARA EL DESGLOSE DE PRECIOS --- */
-.price-details-grid {
-    font-size: 0.9rem;
-}
-.price-line {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
-    margin: 0;
-    border-bottom: 1px solid #e9ecef;
-}
-.price-line:last-child {
-    border-bottom: none;
-}
-.price-line strong {
-    color: var(--subtle-text);
-    font-weight: 500;
-}
-.price-line span {
-    color: var(--text-color);
-    font-weight: 600;
-}
-.price-line span.final-price {
-    font-size: 1.1em;
-    color: #198754; /* Verde para el precio final */
-}
-.price-line span.neto-price {
-    font-size: 0.9em;
-    color: #0d6efd; /* Azul para el precio neto */
-    text-align: right;
-}
+/* (El resto del CSS general, header, etc. no cambia) */
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background-color:var(--background-color);color:var(--text-color);margin:0}.container{max-width:700px;margin:0 auto;padding:1rem}header{text-align:center;padding:1.5rem 0}.main-logo{max-width:120px;margin-bottom:1rem}h1{font-size:1.75rem;font-weight:600;margin:0}#search-wrapper{margin-bottom:1rem}#searchInput{width:100%;padding:15px;font-size:1rem;background-color:var(--card-background);border:1px solid var(--border-color);border-radius:12px;box-sizing:border-box;box-shadow:0 1px 2px rgba(0,0,0,.05)}#searchInput:focus{outline:0;border-color:var(--primary-color);box-shadow:0 0 0 3px rgba(0,122,255,.2)}.product-card{background:var(--card-background);margin-bottom:.75rem;border-radius:12px;border:1px solid var(--border-color);box-shadow:0 2px 4px rgba(0,0,0,.07);overflow:hidden}.product-header{padding:1rem 1.25rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background-color .2s ease}.product-header:hover{background-color:#fafafa}.product-info h2{margin:0;font-size:1.1rem;font-weight:500}.product-info p{margin:4px 0 0 0;color:var(--subtle-text);font-size:.9rem}.expand-icon::before{content:'+';font-size:1.5rem;color:#b0b3b8;transition:transform .3s ease}.product-header.active .expand-icon::before{transform:rotate(45deg);color:var(--primary-color)}.product-details{max-height:0;overflow:hidden;transition:max-height .4s ease-in-out,padding .4s ease-in-out;padding:0 1rem}.product-header.active+.product-details{padding:.5rem 1rem 1rem 1rem}.price-group{background:#f8f9fa;border-left:4px solid;padding:1rem;border-radius:8px;margin-top:.75rem}.price-group-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}.price-group-header img{height:22px}.price-group-header h3{margin:0;font-size:1rem;font-weight:500;color:#333}
+.price-details-grid{font-size:.9rem}.price-line{display:flex;justify-content:space-between;padding:6px 0;margin:0;border-bottom:1px solid #e9ecef}.price-line:last-child{border-bottom:none}.price-line strong{color:var(--subtle-text);font-weight:500}.price-line span{color:var(--text-color);font-weight:600}.price-line span.final-price{font-size:1.1em;color:#198754}.price-line span.neto-price{font-size:.9em;color:#0d6efd;text-align:right}
 
 /* Asignación de colores de acento a cada grupo */
-.group-standard { border-color: var(--color-general); }
-.group-bigmat { border-color: var(--color-bigmat); }
-.group-neopro { border-color: var(--color-neopro); }
-.group-ehlis { border-color: var(--color-ehlis); }
-.group-cecofersa { border-color: var(--color-cecofersa); }
-.group-synergas { border-color: var(--color-synergas); }
-.group-grandes-cuentas { border-color: var(--color-grandes-cuentas); }
-.group-coferdroza { border-color: var(--color-coferdroza); }
+.group-standard { border-color: var(--color-general); }.group-bigmat { border-color: var(--color-bigmat); }.group-neopro { border-color: var(--color-neopro); }.group-ehlis { border-color: var(--color-ehlis); }.group-cecofersa { border-color: var(--color-cecofersa); }.group-synergas { border-color: var(--color-synergas); }.group-grandes-cuentas { border-color: var(--color-grandes-cuentas); }.group-coferdroza { border-color: var(--color-coferdroza); }
 
 /* (El resto de estilos de menú y descargas no cambia) */
 .menu-grid{display:grid;grid-template-columns:1fr;gap:1rem}@media (min-width:600px){.menu-grid{grid-template-columns:1fr 1fr}}.menu-card{background:var(--card-background);padding:1.5rem;border-radius:12px;text-decoration:none;color:var(--text-color);border:1px solid var(--border-color);box-shadow:0 2px 4px rgba(0,0,0,.07);transition:transform .2s ease,box-shadow .2s ease}.menu-card:hover{transform:translateY(-5px);box-shadow:0 4px 12px rgba(0,0,0,.1)}.menu-card h2{margin:0 0 .5rem 0;font-size:1.2rem}.menu-card p{margin:0;color:var(--subtle-text);font-size:.9rem}.menu-card.placeholder{background-color:#f0f2f5;border-style:dashed}.content-box{background:var(--card-background);padding:1.5rem;border-radius:12px;border:1px solid var(--border-color);margin-bottom:1.5rem}.content-box h2{margin-top:0}.link-box{display:flex;gap:.5rem}.link-box input{flex-grow:1;border:1px solid var(--border-color);border-radius:8px;padding:10px;font-family:monospace;background-color:#f8f9fa}.link-box button{background-color:var(--primary-color);color:#fff;border:none;border-radius:8px;padding:0 1rem;font-weight:500;cursor:pointer}.feedback-hidden{display:none}.download-button{display:block;text-decoration:none;text-align:center;padding:12px;border-radius:8px;margin-top:1rem;font-weight:500;transition:background-color .2s ease;border:none;width:100%;font-size:1rem;cursor:pointer}.download-button.excel{background-color:#1D6F42;color:#fff}.download-button.excel:hover{background-color:#165934}.download-button.pdf{background-color:#B30B00;color:#fff}.download-button.pdf:hover{background-color:#8C0900}.download-button:disabled{background-color:#aaa;cursor:not-allowed}.back-link{display:inline-block;margin-top:1.5rem;color:var(--primary-color);text-decoration:none;font-weight:500}
-/* --- NUEVOS ESTILOS PARA EL ESTADO DE BÚSQUEDA DE LA FICHA --- */
+
+/* --- ESTILOS MEJORADOS PARA FICHA TÉCNICA --- */
+.tech-sheet-container { margin-bottom: 1rem; }
+.tech-sheet-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.tech-sheet-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+.tech-sheet-button svg {
+    display: block;
+}
 .tech-sheet-status {
-    text-align: center;
+    text-align: left;
     color: var(--subtle-text);
     font-style: italic;
     padding: 10px 0;
