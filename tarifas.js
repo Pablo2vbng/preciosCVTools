@@ -1,33 +1,30 @@
 // Espera a que la librería jsPDF esté lista
 window.jsPDF = window.jspdf.jsPDF;
 
-// --- URL DE TU API DE GOOGLE APPS SCRIPT ---
-const API_URL = 'https://script.google.com/macros/s/AKfycbyrFV__NgykcCsZS4eI--1N2j9JCFGbcWed8ZMhZqS3pdAeGzYn8Za0m9butWfYQIpafw/exec';
-let allProducts = [];
-
-// 1. Cargar todos los datos al entrar en la página
-document.addEventListener('DOMContentLoaded', async () => {
+// Función para cargar un archivo JSON de tarifa específico
+async function loadTariffForPdf(tariffFile) {
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error('Error al cargar datos');
-        allProducts = await response.json();
+        const response = await fetch(`${tariffFile}?v=${new Date().getTime()}`);
+        if (!response.ok) throw new Error(`Error al cargar ${tariffFile}`);
+        const dataObject = await response.json();
+        const sheetName = Object.keys(dataObject)[0];
+        return dataObject[sheetName];
     } catch (error) {
-        alert('No se pudieron cargar los datos para generar los PDFs. Inténtalo de nuevo.');
+        alert(`No se pudo cargar la tarifa ${tariffFile}. Asegúrate de que el archivo existe en tu proyecto.`);
         console.error(error);
+        return null;
     }
-});
+}
 
-// 2. Función genérica para crear un PDF (sin cambios)
+// Función genérica para crear un PDF
 function generatePdf(title, head, bodyData, button) {
-    if (allProducts.length === 0) {
-        alert('Los datos aún no se han cargado. Espera un momento y vuelve a intentarlo.');
-        return;
-    }
+    if (!bodyData) return;
+    
     const originalText = button.textContent;
     button.textContent = 'Generando...';
     button.disabled = true;
 
-    const doc = new jsPDF({ orientation: 'landscape' }); // Orientación horizontal para más espacio
+    const doc = new jsPDF({ orientation: 'landscape' });
     doc.text(title, 14, 20);
     doc.autoTable({
         head: [head], body: bodyData, startY: 25, theme: 'grid',
@@ -40,61 +37,97 @@ function generatePdf(title, head, bodyData, button) {
     button.disabled = false;
 }
 
-// 3. NUEVA LÓGICA PARA LOS BOTONES DE PDF
+// Lógica para los 8 botones de PDF con CÁLCULO DE PVP
 const head = ['Ref.', 'Descripción', 'PVP Base', 'Dto.', 'Precio Final', 'Precio por Cantidad'];
 
-document.getElementById('pdf-general').addEventListener('click', (e) => {
-    const body = allProducts.map(p => {
-        const pvpBase = `${(p.pvp || 0).toFixed(2)} €`;
-        if (p.netos) return [p.referencia, p.descripcion, pvpBase, 'Neto', '-', p.condiciones_neto];
-        return [p.referencia, p.descripcion, pvpBase, '50%', `${(p.precio_estandar || 0).toFixed(2)} €`, '-'];
+document.getElementById('pdf-general').addEventListener('click', async (e) => {
+    const products = await loadTariffForPdf('Tarifa_General.json');
+    if (!products) return;
+    const body = products.map(p => {
+        const precioFinal = p.PRECIO_ESTANDAR || 0;
+        const pvpBase = (precioFinal > 0) ? (precioFinal / 0.50).toFixed(2) : '0.00';
+        if (p.NETOS) return [p.Referencia, p.Descripcion, `${pvpBase} €`, 'Neto', '-', p.CONDICIONES_NETO];
+        return [p.Referencia, p.Descripcion, `${pvpBase} €`, '50%', `${precioFinal.toFixed(2)} €`, '-'];
     });
-    generatePdf('Tarifa General', head, body, e.target);
+    generatePdf('PDF Tarifa General', head, body, e.target);
 });
 
-document.getElementById('pdf-bigmat').addEventListener('click', (e) => {
-    const body = allProducts.map(p => {
-        const pvpBase = `${(p.pvp || 0).toFixed(2)} €`;
-        if (p.netos) return [p.referencia, p.descripcion, pvpBase, 'Neto', '-', p.condiciones_neto];
-        return [p.referencia, p.descripcion, pvpBase, '50%', `${(p.precio_estandar || 0).toFixed(2)} €`, '-'];
+document.getElementById('pdf-bigmat').addEventListener('click', async (e) => {
+    const products = await loadTariffForPdf('Tarifa_Bigmat.json');
+    if (!products) return;
+    const body = products.map(p => {
+        const precioFinal = p.PRECIO_ESTANDAR || 0;
+        const pvpBase = (precioFinal > 0) ? (precioFinal / 0.50).toFixed(2) : '0.00';
+        if (p.NETOS) return [p.Referencia, p.Descripcion, `${pvpBase} €`, 'Neto', '-', p.CONDICIONES_NETO];
+        return [p.Referencia, p.Descripcion, `${pvpBase} €`, '50%', `${precioFinal.toFixed(2)} €`, '-'];
     });
-    generatePdf('Tarifa BigMat', head, body, e.target);
+    generatePdf('PDF Tarifa BigMat', head, body, e.target);
 });
 
-document.getElementById('pdf-neopro').addEventListener('click', (e) => {
-    const body = allProducts.map(p => [p.referencia, p.descripcion, `${(p.pvp || 0).toFixed(2)} €`, '52%', `${(p.precio_grupo1 || 0).toFixed(2)} €`, '-']);
-    generatePdf('Tarifa Neopro', head, body, e.target);
-});
-
-document.getElementById('pdf-ehlis').addEventListener('click', (e) => {
-    const body = allProducts.map(p => [p.referencia, p.descripcion, `${(p.pvp || 0).toFixed(2)} €`, '52%', `${(p.precio_grupo1 || 0).toFixed(2)} €`, '-']);
-    generatePdf('Tarifa Ehlis', head, body, e.target);
-});
-
-document.getElementById('pdf-cecofersa').addEventListener('click', (e) => {
-    const body = allProducts.map(p => {
-        const pvpBase = `${(p.pvp || 0).toFixed(2)} €`;
-        if (p.netos) return [p.referencia, p.descripcion, pvpBase, 'Neto', '-', p.condiciones_neto];
-        return [p.referencia, p.descripcion, pvpBase, '52%', `${(p.precio_cecofersa || 0).toFixed(2)} €`, '-'];
+document.getElementById('pdf-neopro').addEventListener('click', async (e) => {
+    const products = await loadTariffForPdf('Tarifa_Neopro.json');
+    if (!products) return;
+    const body = products.map(p => {
+        const precioFinal = p.Precio || 0;
+        const pvpBase = (precioFinal > 0) ? (precioFinal / 0.48).toFixed(2) : '0.00';
+        return [p.Referencia, p.Descripcion, `${pvpBase} €`, '52%', `${precioFinal.toFixed(2)} €`, '-'];
     });
-    generatePdf('Tarifa Cecofersa', head, body, e.target);
+    generatePdf('PDF Tarifa Neopro', head, body, e.target);
 });
 
-document.getElementById('pdf-synergas').addEventListener('click', (e) => {
-    const body = allProducts.map(p => [p.referencia, p.descripcion, `${(p.pvp || 0).toFixed(2)} €`, '52%', `${(p.precio_grupo1 || 0).toFixed(2)} €`, '-']);
-    generatePdf('Tarifa Synergas', head, body, e.target);
-});
-
-document.getElementById('pdf-grandes-cuentas').addEventListener('click', (e) => {
-    const body = allProducts.map(p => {
-        const pvpBase = `${(p.pvp || 0).toFixed(2)} €`;
-        if (p.netos_grande_cuentas) return [p.referencia, p.descripcion, pvpBase, 'Neto G.C.', '-', p.condicion_neto_gc];
-        return [p.referencia, p.descripcion, pvpBase, '50%', `${(p.precio_estandar || 0).toFixed(2)} €`, '-'];
+document.getElementById('pdf-ehlis').addEventListener('click', async (e) => {
+    const products = await loadTariffForPdf('Tarifa_Ehlis.json');
+    if (!products) return;
+    const body = products.map(p => {
+        const precioFinal = p.Precio || 0;
+        const pvpBase = (precioFinal > 0) ? (precioFinal / 0.48).toFixed(2) : '0.00';
+        return [p.Referencia, p.Descripcion, `${pvpBase} €`, '52%', `${precioFinal.toFixed(2)} €`, '-'];
     });
-    generatePdf('Tarifa Grandes Cuentas', head, body, e.target);
+    generatePdf('PDF Tarifa Ehlis', head, body, e.target);
 });
 
-document.getElementById('pdf-coferdroza').addEventListener('click', (e) => {
-    const body = allProducts.map(p => [p.referencia, p.descripcion, `${(p.pvp || 0).toFixed(2)} €`, '50%', `${(p.precio_grupo3 || 0).toFixed(2)} €`, '-']);
-    generatePdf('Tarifa Coferdroza', head, body, e.target);
+document.getElementById('pdf-cecofersa').addEventListener('click', async (e) => {
+    const products = await loadTariffForPdf('Tarifa_Cecofersa.json');
+    if (!products) return;
+    const body = products.map(p => {
+        const precioFinal = p['Precio Cecofersa'] || 0;
+        const pvpBase = (precioFinal > 0) ? (precioFinal / 0.48).toFixed(2) : '0.00';
+        if (p.NETOS) return [p.Referencia, p.Descripcion, `${pvpBase} €`, 'Neto', '-', p.CONDICIONES_NETO];
+        return [p.Referencia, p.Descripcion, `${pvpBase} €`, '52%', `${precioFinal.toFixed(2)} €`, '-'];
+    });
+    generatePdf('PDF Tarifa Cecofersa', head, body, e.target);
+});
+
+document.getElementById('pdf-synergas').addEventListener('click', async (e) => {
+    const products = await loadTariffForPdf('Tarifa_Synergas.json');
+    if (!products) return;
+    const body = products.map(p => {
+        const precioFinal = p.Precio || 0;
+        const pvpBase = (precioFinal > 0) ? (precioFinal / 0.48).toFixed(2) : '0.00';
+        return [p.Referencia, p.Descripcion, `${pvpBase} €`, '52%', `${precioFinal.toFixed(2)} €`, '-'];
+    });
+    generatePdf('PDF Tarifa Synergas', head, body, e.target);
+});
+
+document.getElementById('pdf-grandes-cuentas').addEventListener('click', async (e) => {
+    const products = await loadTariffForPdf('Tarifa_Grandes_Cuentas.json');
+    if (!products) return;
+    const body = products.map(p => {
+        const precioFinal = p.PRECIO_ESTANDAR || 0;
+        const pvpBase = (precioFinal > 0) ? (precioFinal / 0.50).toFixed(2) : '0.00';
+        if (p.NETOS_GRANDE_CUENTAS) return [p.Referencia, p.Descripcion, `${pvpBase} €`, 'Neto G.C.', '-', p.CONDICION_NETO_GC];
+        return [p.Referencia, p.Descripcion, `${pvpBase} €`, '50%', `${precioFinal.toFixed(2)} €`, '-'];
+    });
+    generatePdf('PDF Tarifa Grandes Cuentas', head, body, e.target);
+});
+
+document.getElementById('pdf-coferdroza').addEventListener('click', async (e) => {
+    const products = await loadTariffForPdf('Tarifa_Coferdroza.json');
+    if (!products) return;
+    const body = products.map(p => {
+        const precioFinal = p.Precio || 0;
+        const pvpBase = (precioFinal > 0) ? (precioFinal / 0.50).toFixed(2) : '0.00';
+        return [p.Referencia, p.Descripcion, `${pvpBase} €`, '50%', `${precioFinal.toFixed(2)} €`, '-'];
+    });
+    generatePdf('PDF Tarifa Coferdroza', head, body, e.target);
 });
