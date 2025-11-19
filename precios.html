@@ -6,7 +6,7 @@
     <title>Buscador de Precios - CV Tools</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="page-precios">
     <div class="container">
         <header>
             <img src="img/cvtools.png" alt="CV Tools Logo" class="main-logo">
@@ -15,6 +15,7 @@
 
         <main>
             <div id="search-wrapper">
+                 <!-- (El resto del contenido no cambia) -->
                  <div class="tariff-selector-wrapper">
                     <label for="tariffSelector">Selecciona una Tarifa:</label>
                     <select id="tariffSelector">
@@ -25,18 +26,15 @@
                         <option value="Tarifa_Cecofersa.json">Tarifa Cecofersa</option>
                         <option value="Tarifa_Synergas.json">Tarifa Synergas</option>
                         <option value="Tarifa_Grandes_Cuentas.json">Tarifa Grandes Cuentas</option>
-                        <option value="Tarifa_Coferdroza.json">Tarifa Coferdroza</oion>
+                        <option value="Tarifa_Coferdroza.json">Tarifa Coferdroza</option>
                     </select>
                  </div>
                  <input type="text" id="searchInput" placeholder="Buscar por referencia o descripción...">
             </div>
-    
             <div id="resultsContainer"></div>
-            
             <a href="index.html" class="back-link">← Volver al menú principal</a>
         </main>
     </div>
-    
     <script src="script.js"></script>
 </body>
 </html>

@@ -37,7 +37,7 @@ function generatePdf(title, head, bodyData, button) {
     button.disabled = false;
 }
 
-// Lógica para los 8 botones de PDF con CÁLCULO DE PVP
+// Lógica para los 8 botones de PDF con CÁLCULO DE PVP CORREGIDO
 const head = ['Ref.', 'Descripción', 'PVP Base', 'Dto.', 'Precio Final', 'Precio por Cantidad'];
 
 document.getElementById('pdf-general').addEventListener('click', async (e) => {
@@ -68,7 +68,8 @@ document.getElementById('pdf-neopro').addEventListener('click', async (e) => {
     const products = await loadTariffForPdf('Tarifa_Neopro.json');
     if (!products) return;
     const body = products.map(p => {
-        const precioFinal = p.Precio || 0;
+        // CORRECCIÓN: Usar la columna correcta 'PRECIO_GRUPO1' del JSON
+        const precioFinal = p.PRECIO_GRUPO1 || 0;
         const pvpBase = (precioFinal > 0) ? (precioFinal / 0.48).toFixed(2) : '0.00';
         return [p.Referencia, p.Descripcion, `${pvpBase} €`, '52%', `${precioFinal.toFixed(2)} €`, '-'];
     });
@@ -79,7 +80,8 @@ document.getElementById('pdf-ehlis').addEventListener('click', async (e) => {
     const products = await loadTariffForPdf('Tarifa_Ehlis.json');
     if (!products) return;
     const body = products.map(p => {
-        const precioFinal = p.Precio || 0;
+        // CORRECCIÓN: Usar la columna correcta 'PRECIO_GRUPO1' del JSON
+        const precioFinal = p.PRECIO_GRUPO1 || 0;
         const pvpBase = (precioFinal > 0) ? (precioFinal / 0.48).toFixed(2) : '0.00';
         return [p.Referencia, p.Descripcion, `${pvpBase} €`, '52%', `${precioFinal.toFixed(2)} €`, '-'];
     });
@@ -90,7 +92,8 @@ document.getElementById('pdf-cecofersa').addEventListener('click', async (e) => 
     const products = await loadTariffForPdf('Tarifa_Cecofersa.json');
     if (!products) return;
     const body = products.map(p => {
-        const precioFinal = p['Precio Cecofersa'] || 0;
+        // CORRECCIÓN: Usar la columna correcta 'PRECIO_CECOFERSA' del JSON
+        const precioFinal = p.PRECIO_CECOFERSA || 0;
         const pvpBase = (precioFinal > 0) ? (precioFinal / 0.48).toFixed(2) : '0.00';
         if (p.NETOS) return [p.Referencia, p.Descripcion, `${pvpBase} €`, 'Neto', '-', p.CONDICIONES_NETO];
         return [p.Referencia, p.Descripcion, `${pvpBase} €`, '52%', `${precioFinal.toFixed(2)} €`, '-'];
@@ -102,7 +105,8 @@ document.getElementById('pdf-synergas').addEventListener('click', async (e) => {
     const products = await loadTariffForPdf('Tarifa_Synergas.json');
     if (!products) return;
     const body = products.map(p => {
-        const precioFinal = p.Precio || 0;
+        // CORRECCIÓN: Usar la columna correcta 'PRECIO_GRUPO1' del JSON
+        const precioFinal = p.PRECIO_GRUPO1 || 0;
         const pvpBase = (precioFinal > 0) ? (precioFinal / 0.48).toFixed(2) : '0.00';
         return [p.Referencia, p.Descripcion, `${pvpBase} €`, '52%', `${precioFinal.toFixed(2)} €`, '-'];
     });
@@ -125,7 +129,8 @@ document.getElementById('pdf-coferdroza').addEventListener('click', async (e) =>
     const products = await loadTariffForPdf('Tarifa_Coferdroza.json');
     if (!products) return;
     const body = products.map(p => {
-        const precioFinal = p.Precio || 0;
+        // CORRECCIÓN: Usar la columna correcta 'PRECIO_GRUPO3' del JSON
+        const precioFinal = p.PRECIO_GRUPO3 || 0;
         const pvpBase = (precioFinal > 0) ? (precioFinal / 0.50).toFixed(2) : '0.00';
         return [p.Referencia, p.Descripcion, `${pvpBase} €`, '50%', `${precioFinal.toFixed(2)} €`, '-'];
     });
